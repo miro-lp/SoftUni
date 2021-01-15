@@ -9,3 +9,5 @@ for i in range(n):
     total += int(student.MARKS)
 
 print(f'{total / n:.2f}')
+
+FileNotFoundError

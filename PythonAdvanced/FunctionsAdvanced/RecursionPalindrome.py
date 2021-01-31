@@ -1,12 +1,13 @@
 def palindrome(word, index):
-    if len(word) == 0:
-        return True
-    elif len(word) == 1:
-        return True
-    if word[0] == word[-1] and palindrome(word[1:-1], index):
+    if len(word)-index*2 == 0 or len(word)-index*2 == 1:
         return f"{word} is a palindrome"
-    return f"{word} is not a palindrome"
+    if word[index] == word[len(word)-1-index]:
+        return palindrome(word, index+1)
+    else:
+        return (f"{word} is not a palindrome")
 
 
 print(palindrome("abcba", 0))
-print(palindrome("peter", 0))
+print(palindrome("abccba", 0))
+print(palindrome("abcrba", 0))
+print(palindrome("abcbar", 0))

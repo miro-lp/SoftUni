@@ -12,8 +12,9 @@ class User:
             library.rented_books[self.username][book_name] = days_to_return
             library.books_available[author].remove(book_name)
             return f"{book_name} successfully rented for the next {days_to_return} days!"
-        if book_name in library.rented_books[self.username]:
-            return f"The book \"{book_name}\" is already rented and will be available in {library.rented_books[self.username][book_name]} days!"
+        for u in library.rented_books:
+            if book_name in library.rented_books[u]:
+                return f"The book \"{book_name}\" is already rented and will be available in {library.rented_books[u][book_name]} days!"
 
     def return_book(self, author: str, book_name: str, library):
         if book_name not in self.books:

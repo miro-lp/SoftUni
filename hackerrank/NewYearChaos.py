@@ -4,12 +4,15 @@ def minimumBribes(q):
         return
     bribes = 0
     in_q = [i for i in range(1, len(q) + 1)]
+    i_e =0
     while q != in_q:
-        for i, value in enumerate(q):
-            if q[i] != in_q[i]:
+        for i, value in enumerate(q[i_e:]):
+            if q[i+i_e] != in_q[i+i_e]:
                 index = in_q.index(value)
                 in_q[index], in_q[index - 1] = in_q[index - 1], in_q[index]
                 bribes += 1
+                i_e += i
+
                 break
 
     print(bribes)

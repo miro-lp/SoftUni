@@ -2,7 +2,7 @@
 def what_flavors(cost, money):
     half = money/2
     for x in range(len(cost)):
-        if ((money - cost[x]) in cost and half!=cost[x]) or (half==cost[x] and cost.count(cost[x])>1) :
+        if ((money - cost[x]) in cost and half!=cost[x]) or (half == cost[x] and cost.v_count(cost[x]) > 1) :
             yield  x + 1
 
 

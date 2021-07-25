@@ -11,6 +11,7 @@ from petstagram.pets.models import Pet
 class PetForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = Pet
+        exclude = ('user',)
         fields = '__all__'
 
 

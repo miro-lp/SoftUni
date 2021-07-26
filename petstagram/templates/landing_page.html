@@ -19,7 +19,7 @@
                 <li><a class="nav-link" href="{% url 'create pet' %}">Add pet photo</a></li>
             {% if request.user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link" href="url to profile">{{ request.user }}</a>
+                <a class="nav-link" href="{% url 'profile user' %}">{{ request.user }}</a>
                 </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'log out user' %}">Log out</a>

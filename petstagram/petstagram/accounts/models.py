@@ -5,6 +5,7 @@ from django.db import models
 from petstagram.accounts.managers import PetstagramUserManager
 
 
+
 class PetstagramUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         unique=True,
@@ -31,5 +32,6 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
+
 
 from .signals import *

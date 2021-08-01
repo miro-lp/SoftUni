@@ -2,10 +2,10 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
-from petstagram.accounts.managers import PetstagramUserManager
+from .managers import TravelUserManager
 
 
-class PetstagramUser(AbstractBaseUser, PermissionsMixin):
+class TravelUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         unique=True,
     )
@@ -18,19 +18,27 @@ class PetstagramUser(AbstractBaseUser, PermissionsMixin):
         auto_now_add=True
     )
 
-    object = PetstagramUserManager()
+    object = TravelUserManager()
 
 
-class Profile(models.Model):
+class TravelProfile(models.Model):
+    first_name = models.CharField(max_length=15)
+    last_name = models.CharField(max_length=15, blank=True)
+    about_me = models.TextField(blank=True)
+    motto = models.TextField(blank=True)
+
     profile_image = models.ImageField(
         upload_to='profiles',
         blank=True
     )
     user = models.OneToOneField(
-        PetstagramUser,
+        TravelUser,
         on_delete=models.CASCADE,
         primary_key=True
     )
+
+    def __str__(self):
+        return self.user.email
 
 
 from .signals import *

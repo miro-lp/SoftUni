@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from YouTravel.accounts.forms import LoginForm, RegisterForm, ProfileForm
 from YouTravel.accounts.models import TravelProfile
-
+from django.views.generic import ListView
 
 def sign_in_user(request):
     if request.method == 'POST':
@@ -64,3 +64,8 @@ def profile_edit(request):
             'form': form,
         }
     return render(request, 'accounts/edit_profile.html', context)
+
+
+class TravelersListView(ListView):
+    model = TravelProfile
+    template_name = 'accounts/list_profiles.html'

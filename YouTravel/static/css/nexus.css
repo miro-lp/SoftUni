@@ -2220,15 +2220,15 @@ ul.social-icons li a:hover {
   transition-property: background-color;
 }
 .social-facebook a {
-  background: url(../img/social_icons/facebook.png);
+  background: url(../img/social_icons/myspace.png);
 }
 .social-facebook a:hover {
   background-color: #3b5998 !important;
 }
-.social-twitter a {
-  background: url(../img/social_icons/twitter.png);
+.social-friends a {
+  background: url(../img/social_icons/friends.png);
 }
-.social-twitter a:hover {
+.social-friends a:hover {
   background-color: #48c4d2 !important;
 }
 .social-googleplus a {

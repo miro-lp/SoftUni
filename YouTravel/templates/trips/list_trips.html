@@ -71,25 +71,50 @@
                                         </div>
                                     </div>
                                     <div id="accordion" class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a class="accordion-toggle" href="#collapse-{{ trip.id }}" data-parent="#accordion" data-toggle="collapse">
-                                                Comments
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse-{{ trip.id }}" class="accordion-body collapse in">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                   <div class="col-md-7">
-                                                     <p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus,
-                                                        qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothicas.</p>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="accordion-toggle" href="#collapse-{{ trip.id }}"
+                                                       data-parent="#accordion" data-toggle="collapse">
+                                                        Comments
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse-{{ trip.id }}" class="accordion-body collapse in">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-7">
+                                                            {% if comments|get_comment:trip.id %}
+                                                                {% for comment in comments|get_comment:trip.id %}
+                                                                    <div class="box">
+                                                                        <h5><u>{{ comment.user }}</u>:
+                                                                            <em>{{ comment.comment }}</em></h5>
+                                                                        <hr>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <div class="box">
+                                                                    <h3>There are no comments. </h3>
+                                                                </div>
+                                                            {% endif %}
+
+                                                            <div class="box">
+                                                                <form method="post"
+                                                                      action="{% url 'comment trip' trip.id %}">
+                                                                    {% csrf_token %}
+                                                                    {{ comment_form }}
+                                                                    <button class="btn btn-primary mt-2" type="submit">
+                                                                        Add comment
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 {% endfor %}
                             {% else %}
                                 <div class="panel-heading">

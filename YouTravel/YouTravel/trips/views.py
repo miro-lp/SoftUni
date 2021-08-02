@@ -1,14 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.views import generic as views
+from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from YouTravel.common.models import Like
+from YouTravel.common.forms import CommentForm
+from YouTravel.common.models import Like, Comment
 from YouTravel.trips.forms import TripForm, TripImageFrom
 from YouTravel.trips.models import Trip, Continent, TripImage
 
 
-class ContinentsListView(views.ListView):
+class ContinentsListView(ListView):
     model = Continent
     template_name = 'trips/continents_list.html'
 
@@ -16,13 +17,16 @@ class ContinentsListView(views.ListView):
 def trip_list(request, pk):
     trips = Trip.objects.all().filter(continent_id=pk)
     is_liked_by_user = {}
+    comments = Comment.objects.all()
     for trip in trips:
         trip.likes_count = trip.like_set.count()
         is_liked_by_user[trip.id] = trip.like_set.filter(user_id=request.user.id).exists()
 
     context = {
         'trips': trips,
-        'is_liked_by_user': is_liked_by_user
+        'is_liked_by_user': is_liked_by_user,
+        'comments': comments,
+        'comment_form': CommentForm(),
     }
     return render(request, 'trips/list_trips.html', context)
 
@@ -108,4 +112,19 @@ def like_trip(request, pk):
     else:
         like = Like(trip=trip, user=request.user, )
         like.save()
+    return redirect('list trips', trip.continent_id)
+
+
+@login_required
+def comment_trip(request, pk):
+    trip = Trip.objects.get(pk=pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = Comment(
+            comment=form.cleaned_data['text'],
+            trip=trip,
+            user=request.user
+        )
+
+        comment.save()
     return redirect('list trips', trip.continent_id)

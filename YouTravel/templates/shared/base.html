@@ -28,20 +28,19 @@
 </head>
 <body>
 <div id="body-bg">
-    <ul class="social-icons pull-right ">
-        <li class="social-delicious">
-            <a href="#" target="_blank" title="Friends"></a>
-            Friends
-        </li>
-        <li class="social-dribbble">
-            <a href="#" target="_blank" title="Request"></a>
-            Request
-        </li>
-        <li class="social-deviantart">
-            <a href="#" target="_blank" title="Facebook"></a>
-            Mail
-        </li>
-            </ul>
+    {% if request.user.is_authenticated %}
+        <ul class="social-icons pull-right ">
+            <li class="social-delicious">
+                <a href="{% url 'friends list' %}" title="Friends"></a>
+                Friends
+            </li>
+            <li class="social-dribbble">
+                <a href="{% url 'show friend request' %}" title="Request"></a>
+                Request
+            </li>
+
+        </ul>
+    {% endif %}
     <div id="pre-header" class="container" style="height:340px">
     </div>
     <div id="header">
@@ -72,23 +71,23 @@
                         </li>
 
                         {% if request.user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'profiles list' %}" class="fa-globe">Travelers</a>
+                            <li>
+                                <a href="{% url 'profiles list' %}" class="fa-globe">Travelers</a>
 
-                        </li>
-                          <li>
-                            <a href="{% url 'profile details' %}" class="fa-male">Profile</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'profile details' %}" class="fa-male">Profile</a>
 
-                        </li>
+                            </li>
 
-                    {% endif %}
+                        {% endif %}
                         {% if request.user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'sign out' %}" class="fa-comment">Sign out</a>
-                        </li>
+                            <li>
+                                <a href="{% url 'sign out' %}" class="fa-comment">Sign out</a>
+                            </li>
                         {% else %}
                             <li>
-                            <a href="{% url 'sign in' %}" class="fa-comment">Sign in</a>
+                                <a href="{% url 'sign in' %}" class="fa-comment">Sign in</a>
                             </li>
                         {% endif %}
                     </ul>

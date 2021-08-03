@@ -99,6 +99,7 @@
                                                             {% endif %}
 
                                                             <div class="box">
+                                                                 {% if request.user.is_authenticated %}
                                                                 <form method="post"
                                                                       action="{% url 'comment trip' trip.id %}">
                                                                     {% csrf_token %}
@@ -107,6 +108,7 @@
                                                                         Add comment
                                                                     </button>
                                                                 </form>
+                                                                {% endif %}
                                                             </div>
                                                         </div>
 

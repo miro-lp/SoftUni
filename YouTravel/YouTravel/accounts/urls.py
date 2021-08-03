@@ -1,6 +1,6 @@
 from django.urls import path
 
-from YouTravel.accounts.views import sign_in_user, sign_up_user, sign_out_user, profile_details, profile_edit, TravelersListView
+from YouTravel.accounts.views import *
 
 urlpatterns = [
     path('sign_in/', sign_in_user, name='sign in'),
@@ -9,5 +9,8 @@ urlpatterns = [
     path('profile/', profile_details, name='profile details'),
     path('profile_edit/', profile_edit, name='profile edit'),
     path('profiles/', TravelersListView.as_view(), name='profiles list'),
-
+    path('request/<int:pk>', send_friend_request, name='send friend request'),
+    path('show_request/', ShowFriendRequests.as_view(), name='show friend request'),
+    path('accept_request/<int:pk>', accept_friend_request, name='accept friend request'),
+    path('show_friends/', ShowMyFriends.as_view(), name='friends list'),
 ]

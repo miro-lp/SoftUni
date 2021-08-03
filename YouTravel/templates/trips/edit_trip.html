@@ -29,6 +29,15 @@
                                     </div>
 
                                 </form>
+                                {% for image in images %}
+                                <div class="col-md-5">
+
+                                    <img src="{{ image.image.url}}" alt="filler image">
+                                <a href="{% url 'delete image' image.id %}" > Delete </a>
+
+                                </div>
+                                {% endfor %}
+
 
                             </div>
                             <!-- End Login Box -->

@@ -36,6 +36,7 @@ class TravelProfile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
+    friends = models.ManyToManyField("TravelProfile", blank=True)
 
     def __str__(self):
         return self.user.email

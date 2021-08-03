@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
-# Create your views here.
 from YouTravel.common.forms import CommentForm
 from YouTravel.common.models import Like, Comment
 from YouTravel.trips.forms import TripForm, TripImageFrom
@@ -52,20 +51,21 @@ def add_trip(request):
             image.trip = Trip.objects.get(id=trip.id)
             image.save()
             return redirect('profile details')
+
     else:
         form = TripForm()
         form_image = TripImageFrom()
-        context = {
-            'form': form,
-            'form_image': form_image
-        }
-        return render(request, 'trips/add_trip.html', context)
+    context = {
+        'form': form,
+        'form_image': form_image
+    }
+    return render(request, 'trips/add_trip.html', context)
 
 
 @login_required
 def edit_trip(request, pk):
     trip = Trip.objects.get(id=pk)
-
+    images = TripImage.objects.filter(trip_id=trip.id)
     if request.method == 'POST':
         form = TripForm(request.POST, request.FILES, instance=trip)
         form_image = TripImageFrom(request.POST, request.FILES)
@@ -80,12 +80,30 @@ def edit_trip(request, pk):
     else:
         form = TripForm(instance=trip)
         form_image = TripImageFrom()
-        context = {
-            'form': form,
-            'form_image': form_image,
-            'trip': trip
-        }
-        return render(request, 'trips/edit_trip.html', context)
+    context = {
+        'form': form,
+        'form_image': form_image,
+        'trip': trip,
+        'images': images
+    }
+    return render(request, 'trips/edit_trip.html', context)
+
+
+@login_required
+def delete_image(request, pk):
+    image = TripImage.objects.get(pk=pk)
+    trip = Trip.objects.get(id=image.trip_id)
+    images = TripImage.objects.filter(trip_id=trip.id)
+    image.delete()
+    form = TripForm(instance=trip)
+    form_image = TripImageFrom()
+    context = {
+        'form': form,
+        'form_image': form_image,
+        'trip': trip,
+        'images': images
+    }
+    return render(request, 'trips/edit_trip.html', context)
 
 
 @login_required
@@ -95,12 +113,11 @@ def delete_trip(request, pk):
     if request.method == 'POST':
         trip.delete()
         return redirect('my list trips', request.user.id)
-    else:
-        context = {
-            'trip': trip,
-            'user': user
-        }
-        return render(request, 'trips/delete_trip.html', context)
+    context = {
+        'trip': trip,
+        'user': user
+    }
+    return render(request, 'trips/delete_trip.html', context)
 
 
 @login_required
@@ -125,6 +142,5 @@ def comment_trip(request, pk):
             trip=trip,
             user=request.user
         )
-
         comment.save()
     return redirect('list trips', trip.continent_id)

@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from YouTravel.trips.validators import *
+
 UserModel = get_user_model()
 
 
@@ -22,7 +24,10 @@ class Continent(models.Model):
 
 
 class Trip(models.Model):
-    name_trip = models.CharField(max_length=15)
+    name_trip = models.CharField(max_length=15,
+                                 validators=(is_title_start_alpha,
+                                             is_title_start_capitalized,
+                                             is_title_length_less))
     country_name = models.CharField(max_length=15)
     description = models.TextField()
     publish_date = models.DateTimeField(auto_now_add=True)
@@ -43,5 +48,3 @@ class Trip(models.Model):
 class TripImage(models.Model):
     image = models.ImageField(upload_to='trip_images')
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-
-

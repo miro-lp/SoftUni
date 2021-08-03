@@ -38,5 +38,12 @@ class RegisterForm(BootstrapFormMixin, UserCreationForm):
 class ProfileForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = TravelProfile
-        exclude = ('user',)
+        exclude = ('user', 'friends',)
         fields = '__all__'
+
+    def clean(self):
+        if len(self.cleaned_data['first_name']) <= 3:
+            raise ValidationError('Title must have more than 3 symbols')
+        if not self.cleaned_data['first_name'][0].isupper():
+            raise ValidationError('Title must start with capitalized letter')
+

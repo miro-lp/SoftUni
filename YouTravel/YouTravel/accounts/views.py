@@ -1,12 +1,15 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse_lazy
+
 from YouTravel.accounts.forms import LoginForm, RegisterForm, ProfileForm
 from YouTravel.accounts.models import TravelProfile
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from YouTravel.common.models import FriendRequest
 
@@ -45,18 +48,29 @@ def sign_out_user(request):
     return redirect('index')
 
 
-@login_required
-def profile_details(request):
-    profile = TravelProfile.objects.get(pk=request.user.id)
-    context = {
-        'profile': profile,
-    }
-    return render(request, 'accounts/profile_details.html', context)
+#
+# @login_required
+# def profile_details(request):
+#     profile = TravelProfile.objects.get(pk=request.user.id)
+#     context = {
+#         'profile': profile,
+#     }
+#     return render(request, 'accounts/profile_details.html', context)
+
+
+class ProfileDetails(LoginRequiredMixin, DetailView):
+    model = TravelProfile
+    template_name = 'accounts/profile_details.html'
+    context_object_name = 'profile'
+
+    def get_object(self):
+        obj = TravelProfile.objects.get(user_id=self.request.user.id)
+        return obj
 
 
 @login_required
 def profile_edit(request):
-    profile = TravelProfile.objects.get(pk=request.user.id)
+    profile = TravelProfile.objects.get(user_id=request.user.id)
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -65,8 +79,8 @@ def profile_edit(request):
     else:
         form = ProfileForm(instance=profile)
     context = {
-            'form': form,
-        }
+        'form': form,
+    }
     return render(request, 'accounts/edit_profile.html', context)
 
 
@@ -108,7 +122,7 @@ def accept_friend_request(request, pk):
         friends_request.to_user.friends.add(friends_request.from_user)
         friends_request.from_user.friends.add(friends_request.to_user)
         friends_request.delete()
-    return render(request, 'accounts/request_list.html')
+    return redirect('show friend request')
 
 
 class ShowMyFriends(LoginRequiredMixin, ListView):

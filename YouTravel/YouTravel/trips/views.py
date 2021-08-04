@@ -13,6 +13,7 @@ from YouTravel.trips.models import Trip, Continent, TripImage
 class ContinentsListView(ListView):
     model = Continent
     template_name = 'trips/continents_list.html'
+    ordering = ["continent_name"]
 
 
 def trip_list(request, pk):
@@ -124,7 +125,7 @@ def delete_trip(request, pk):
     user = request.user
     if request.method == 'POST':
         trip.delete()
-        return redirect('my list trips', request.user.id)
+        return redirect('my list trips')
     context = {
         'trip': trip,
         'user': user

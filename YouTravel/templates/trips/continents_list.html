@@ -32,12 +32,12 @@
                                         {% for continent in continent_list %}
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            <a class="accordion-toggle" href="" data-parent="#accordion2" data-toggle="collapse">
+                                            <a class="accordion-toggle" href="#collapse-{{ continent.id }}" data-parent="#accordion2" data-toggle="collapse">
                                                 {{ continent.continent_name }}
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapse2-One" class="accordion-body collapse in">
+                                    <div id="collapse-{{ continent.id }}" class="accordion-body collapse in">
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-5">

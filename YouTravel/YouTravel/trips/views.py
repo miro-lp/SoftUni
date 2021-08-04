@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
+from YouTravel.accounts.models import TravelProfile
 from YouTravel.common.forms import CommentForm
 from YouTravel.common.models import Like, Comment
 from YouTravel.trips.forms import TripForm, TripImageFrom
@@ -30,12 +32,22 @@ def trip_list(request, pk):
     return render(request, 'trips/list_trips.html', context)
 
 
-@login_required
-def my_trip_list(request, pk):
-    my_trips = Trip.objects.all().filter(user_id=pk)
-    context = {'my_trips': my_trips,
-               }
-    return render(request, 'trips/my_list_trips.html', context)
+# @login_required
+# def my_trip_list(request, pk):
+#     my_trips = Trip.objects.all().filter(user_id=pk)
+#     context = {'my_trips': my_trips,
+#                }
+#     return render(request, 'trips/my_list_trips.html', context)
+
+
+class MyListTrips(LoginRequiredMixin, ListView):
+    model = Trip
+    template_name = 'trips/my_list_trips.html'
+    paginate_by = 3
+    context_object_name = "my_trips"
+
+    def get_queryset(self):
+        return Trip.objects.all().filter(user=self.request.user)
 
 
 @login_required

@@ -11,6 +11,6 @@ def get_value(dictionary, key):
 
 
 @register.filter(name='get_comment')
-def get_value(comment_all, key):
+def get_comment(comment_all, key):
     comments = comment_all.filter(trip_id=key)
     return comments

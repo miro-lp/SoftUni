@@ -43,6 +43,7 @@ def sign_up_user(request):
     return render(request, 'accounts/signup.html', context)
 
 
+
 def sign_out_user(request):
     logout(request)
     return redirect('index')

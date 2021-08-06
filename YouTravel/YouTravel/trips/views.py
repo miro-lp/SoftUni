@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 
-from YouTravel.accounts.models import TravelProfile
+
 from YouTravel.common.forms import CommentForm
 from YouTravel.common.models import Like, Comment
 from YouTravel.trips.forms import TripForm, TripImageFrom

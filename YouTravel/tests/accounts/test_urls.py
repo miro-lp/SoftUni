@@ -7,44 +7,40 @@ class TestUrls(SimpleTestCase):
 
     def test_sign_in_url(self):
         url = reverse('sign in')
-        self.assertEqual(resolve(url).func, sign_in_user)
+        self.assertEqual(sign_in_user, resolve(url).func)
 
     def test_sign_up_url(self):
         url = reverse('sign up')
-        self.assertEqual(resolve(url).func, sign_up_user)
+        self.assertEqual(sign_up_user, resolve(url).func)
 
     def test_sign_out_url(self):
         url = reverse('sign out')
-        self.assertEqual(resolve(url).func, sign_out_user)
+        self.assertEqual(sign_out_user, resolve(url).func)
 
-    def test_sign_out_url(self):
+    def test_profile_details_url(self):
         url = reverse('profile details')
-        self.assertEqual(resolve(url).func.view_class, ProfileDetails)
+        self.assertEqual(ProfileDetails, resolve(url).func.view_class)
 
     def test_profile_edit(self):
         url = reverse('profile edit')
-        self.assertEqual(resolve(url).func, profile_edit)
+        self.assertEqual(profile_edit, resolve(url).func)
 
     def test_profile_edit(self):
         url = reverse('profiles list')
-        self.assertEqual(resolve(url).func.view_class, TravelersListView)
+        self.assertEqual(TravelersListView, resolve(url).func.view_class)
 
     def test_send_friend_request(self):
         url = reverse('send friend request', kwargs={'pk': int()})
-        self.assertEqual(resolve(url).func, send_friend_request)
+        self.assertEqual(send_friend_request, resolve(url).func)
 
     def test_show_friend_request(self):
         url = reverse('show friend request')
-        self.assertEqual(resolve(url).func.view_class, ShowFriendRequests)
+        self.assertEqual(ShowFriendRequests, resolve(url).func.view_class)
 
     def test_accept_friend_request(self):
         url = reverse('accept friend request', kwargs={'pk': int()})
-        self.assertEqual(resolve(url).func, accept_friend_request)
+        self.assertEqual(accept_friend_request, resolve(url).func)
 
     def test_show_friends(self):
         url = reverse('friends list')
-        self.assertEqual(resolve(url).func.view_class, ShowMyFriends)
-
-
-
-
+        self.assertEqual(ShowMyFriends, resolve(url).func.view_class)

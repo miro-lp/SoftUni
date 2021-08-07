@@ -89,7 +89,7 @@ def edit_trip(request, pk):
             trip.save()
             image.trip = Trip.objects.get(id=trip.id)
             image.save()
-            return redirect('my list trips', request.user.id)
+            return redirect('my list trips')
     else:
         form = TripForm(instance=trip)
         form_image = TripImageFrom()

@@ -21,7 +21,7 @@ class FormsTest(TestCase):
                                'password': '12345678'})
 
         self.assertFalse(form.is_valid())
-        self.assertEquals([error for field in form for error in field.errors][0], 'Email/Password is incorrect')
+        self.assertEquals('Email/Password is incorrect', [error for field in form for error in field.errors][0])
 
     def test_register_form__when_is_valid(self):
         form = RegisterForm(data={'email': 'miro1_lp@abv.bg',
@@ -34,8 +34,8 @@ class FormsTest(TestCase):
                                   'password1': '1q!Q2w@W',
                                   'password2': '1q!Q2w@W', })
         self.assertFalse(form.is_valid())
-        self.assertEquals([error for field in form for error in field.errors][0],
-                          'Travel user with this Email already exists.')
+        self.assertEquals('Travel user with this Email already exists.',
+                          [error for field in form for error in field.errors][0])
 
     def test_register_form__when_password_is_short(self):
         form = RegisterForm(data={'email': 'miro1_lp@abv.bg',
@@ -43,8 +43,9 @@ class FormsTest(TestCase):
                                   'password2': '1234B', })
 
         self.assertFalse(form.is_valid())
-        self.assertEquals([error for field in form for error in field.errors][0],
-                          'This password is too short. It must contain at least 8 characters.')
+        self.assertEquals(
+            'This password is too short. It must contain at least 8 characters.',
+            [error for field in form for error in field.errors][0], )
 
     def test_profile_form__when_is_valid(self):
         form = ProfileForm(data={'first_name': 'Pesho',
@@ -56,4 +57,4 @@ class FormsTest(TestCase):
                                  })
 
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.errors['__all__'][0], 'Title must start with capitalized letter')
+        self.assertEquals('Title must start with capitalized letter', form.errors['__all__'][0], )

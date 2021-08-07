@@ -14,33 +14,59 @@ class AccountsViewsTest(TestCase):
         self.client = Client()
         self.user = UserModel.object.create_user(email='miro_lp@abv.bg', password='12345678')
 
+    def test_signup_GET(self):
+        response = self.client.get(reverse('sign up'))
+
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/signup.html')
+
+    def test_signup_POST(self):
+        response = self.client.post(reverse('sign up'), data={
+            'email': 'miro_lp1@abv.bg',
+            'password1': '1q!Q2w@W',
+            'password2': '1q!Q2w@W'
+        })
+        logged_in = self.client.login(email='miro_lp1@abv.bg', password='1q!Q2w@W')
+
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(response['Location'], reverse('profile details'))
+        self.assertTrue(logged_in)
+
     def test_login_GET(self):
         response = self.client.get(reverse('sign in'))
 
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/login.html')
 
-    def test_login_POST__user_exist(self):
+    def test_login_when_user_sign_in_GET(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('index'))
+
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'index.html')
+        self.assertTrue(response.context['user'].is_active)
+
+    def test_login_POST__user_exist_redirect_index(self):
         response = self.client.post(reverse('sign in'), data={
             'email': 'miro_lp@abv.bg',
             'password': '12345678'
         })
+        logged_in = self.client.login(email='miro_lp@abv.bg', password='12345678')
 
         self.assertEquals(response.status_code, 302)
-
-
-
-
+        self.assertEquals(response['Location'], reverse('index'))
+        self.assertTrue(logged_in)
 
     def test_login_POST__user_not_exist(self):
-        user_1 = UserModel(id=2, email='miro_lp1@abv.bg', password='123456789')
-        response = self.client.get(reverse('sign in'))
-        with self.assertRaises(Exception) as ex:
-            self.client.force_login(user_1)
+        response = self.client.post(reverse('sign in'), data={
+            'email': 'miro_lp1@abv.bg',
+            'password': '12345678'
+        })
+        logged_in = self.client.login(email='miro_lp1@abv.bg', password='12345678')
 
-        print(ex.exception)
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/login.html')
+        self.assertFalse(logged_in)
 
     def test_profile_details_GET(self):
         self.client.force_login(self.user)

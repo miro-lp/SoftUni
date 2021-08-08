@@ -72,7 +72,92 @@ class AccountsViewsTest(TestCase):
                                                                'country_name': 'Test_country',
                                                                'description': 'It is a test',
                                                                'continent': 'Africa',
-                                                               'image': '/tests/trips/test.jpeg'})
+                                                               'image': 'YouTravel/media_files/trip_images/Dogg.jpg'})
 
         self.assertEquals(200, response.status_code)
         self.assertTemplateUsed(response, 'trips/add_trip.html')
+
+    def test_edit_trip_GET(self):
+        trip = Trip.objects.create(name_trip='Test_trip',
+                                   country_name='Test_country',
+                                   description='It is a test',
+                                   continent=self.africa,
+                                   user=self.user)
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse('edit trip', kwargs={'pk': trip.id}))
+
+        self.assertEquals(200, response.status_code)
+        self.assertTemplateUsed(response, 'trips/edit_trip.html')
+
+    def test_delete_trip_GET(self):
+        trip = Trip.objects.create(name_trip='Test_trip',
+                                   country_name='Test_country',
+                                   description='It is a test',
+                                   continent=self.africa,
+                                   user=self.user)
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse('delete trip', kwargs={'pk': trip.id}))
+
+        self.assertEquals(200, response.status_code)
+        self.assertTemplateUsed(response, 'trips/delete_trip.html')
+
+    def test_delete_trip_POST(self):
+        trip = Trip.objects.create(name_trip='Test_trip',
+                                   country_name='Test_country',
+                                   description='It is a test',
+                                   continent=self.africa,
+                                   user=self.user)
+        self.client.force_login(self.user)
+
+        response = self.client.post(reverse('delete trip', kwargs={'pk': trip.id}))
+
+        self.assertEquals(302, response.status_code)
+        self.assertEquals(0, len(Trip.objects.all()))
+        self.assertEquals(reverse('my list trips'), response['Location'])
+
+    def test_like_trip_when_exist(self):
+        self.client.force_login(self.user)
+        trip = Trip.objects.create(name_trip='Test_trip',
+                                   country_name='Test_country',
+                                   description='It is a test',
+                                   continent=self.africa,
+                                   user=self.user)
+        Like.objects.create(trip=trip,
+                            user=self.user)
+        response = self.client.get(reverse('like trip', kwargs={'pk': trip.id}))
+        is_like_exist = Like.objects.filter(user_id=self.user.id, trip_id=trip.id)
+
+        self.assertEquals(302, response.status_code)
+        self.assertEquals(reverse('list trips', kwargs={'pk': trip.continent_id}), response['Location'])
+        self.assertEquals(0, len(is_like_exist))
+
+    def test_like_trip_when_not_exist(self):
+        self.client.force_login(self.user)
+        trip = Trip.objects.create(name_trip='Test_trip',
+                                   country_name='Test_country',
+                                   description='It is a test',
+                                   continent=self.africa,
+                                   user=self.user)
+        response = self.client.get(reverse('like trip', kwargs={'pk': trip.id}))
+        is_like_exist = Like.objects.filter(user_id=self.user.id, trip_id=trip.id)
+
+        self.assertEquals(302, response.status_code)
+        self.assertEquals(reverse('list trips', kwargs={'pk': trip.continent_id}), response['Location'])
+        self.assertEquals(1, len(is_like_exist))
+
+    def test_comment_trip_POST(self):
+        self.client.force_login(self.user)
+        trip = Trip.objects.create(name_trip='Test_trip',
+                                   country_name='Test_country',
+                                   description='It is a test',
+                                   continent=self.africa,
+                                   user=self.user)
+
+        response = self.client.post(reverse('comment trip', kwargs={'pk': trip.id}), data={'text': 'Test comment'})
+        comment = Comment.objects.filter(trip_id=trip.id, user_id=self.user.id)
+
+        self.assertEquals(302, response.status_code)
+        self.assertEquals(reverse('list trips', kwargs={'pk': trip.continent_id}), response['Location'])
+        self.assertEquals(1, len(comment))

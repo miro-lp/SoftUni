@@ -73,8 +73,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'YouTravel.wsgi.application'
 
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'youtravelworld123@gmail.com'
+EMAIL_HOST_PASSWORD = '1q!Q2w@W'
+EMAIL_PORT = 587
+
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
 
 DATABASES = {
     'default': {
@@ -144,8 +153,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_TASK_SERIALIZER = 'json'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'youtravelworld1234@gmail.com'
-EMAIL_HOST_PASSWORD = '1q!Q2w@W'
-EMAIL_PORT = 587
+

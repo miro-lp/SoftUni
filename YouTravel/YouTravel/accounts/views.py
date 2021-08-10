@@ -4,8 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 
-# Create your views here.
-from django.urls import reverse_lazy
+
 
 from YouTravel.accounts.forms import LoginForm, RegisterForm, ProfileForm
 from YouTravel.accounts.models import TravelProfile
@@ -35,7 +34,7 @@ def sign_up_user(request):
         if form.is_valid():
             user = form.save()
             email = user.email
-            send_greeting_email.delay(email)
+            send_greeting_email(email)
             login(request, user)
             return redirect('profile details')
     else:

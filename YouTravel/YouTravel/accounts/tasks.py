@@ -11,3 +11,4 @@ def send_greeting_email(email):
     )
     return email_to_send.send()
 
+

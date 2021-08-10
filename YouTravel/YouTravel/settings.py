@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-pac=nsdj=-ho2l)wa4w)v4_-#b4mt^)*dv394vb2(6id+zvmtx
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -75,7 +73,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'YouTravel.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -89,7 +86,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -109,7 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -123,7 +118,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -135,8 +129,23 @@ STATICFILES_DIRS = [BASE_DIR / "static", ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_files'
 
 AUTH_USER_MODEL = 'accounts.TravelUser'
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TASK_SERIALIZER = 'json'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'youtravelworld1234@gmail.com'
+EMAIL_HOST_PASSWORD = '1q!Q2w@W'
+EMAIL_PORT = 587

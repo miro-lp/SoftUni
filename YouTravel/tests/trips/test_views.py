@@ -1,10 +1,14 @@
+from os.path import join
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from django.test import TestCase, Client
 from django.urls import reverse, resolve
 
-from YouTravel.accounts.models import TravelProfile
-from YouTravel.common.models import FriendRequest, Comment, Like
+
+from YouTravel.common.models import  Comment, Like
 from YouTravel.trips.models import Continent, Trip
 
 UserModel = get_user_model()
@@ -67,12 +71,16 @@ class AccountsViewsTest(TestCase):
         self.assertTemplateUsed(response, 'trips/add_trip.html')
 
     def test_add_trip_invalid_form_POST(self):
+        image_path = join(settings.BASE_DIR, 'tests', 'trips', 'images', 'test.jpg')
+        image = SimpleUploadedFile(name='test_image.jpg',
+                                   content=open(image_path, 'rb').read(),
+                                   content_type='image/jpeg')
         self.client.force_login(self.user)
-        response = self.client.post(reverse('add trip'), data={'name_trip': 'Test_trip',
-                                                               'country_name': 'Test_country',
+        response = self.client.post(reverse('add trip'), data={'name_trip': 'Test trip',
+                                                               'country_name': 'Test country',
                                                                'description': 'It is a test',
-                                                               'continent': 'Africa',
-                                                               'image': 'YouTravel/media_files/trip_images/Dogg.jpg'})
+                                                               'continent': {'Africa': self.africa},
+                                                               'image': image, })
 
         self.assertEquals(200, response.status_code)
         self.assertTemplateUsed(response, 'trips/add_trip.html')

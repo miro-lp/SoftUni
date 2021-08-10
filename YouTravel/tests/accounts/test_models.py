@@ -11,3 +11,5 @@ class ModelTest(TestCase):
         self.client = Client()
         self.user = UserModel.object.create_user(email='miro_lp@abv.bg', password='12345678')
 
+
+

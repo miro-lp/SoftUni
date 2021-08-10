@@ -105,11 +105,23 @@ class AccountsViewsTest(TestCase):
         self.assertTemplateUsed(response, 'accounts/profiles_list.html')
         self.assertEquals(2, len(response.context['travelprofile_list']))
 
-    def test_send_friend_request(self):
+    def test_send_friend_request_if_not_exist(self):
         self.client.force_login(self.user)
         user1 = UserModel.object.create_user(email='miro1_lp@abv.bg', password='123456781')
         self.client.get(reverse('send friend request', kwargs={'pk': user1.id}))
         friends_request = FriendRequest.objects.all()
+
+        self.assertEqual(1, len(friends_request))
+
+    def test_send_friend_request_if_exist(self):
+        self.client.force_login(self.user)
+        user1 = UserModel.object.create_user(email='miro1_lp@abv.bg', password='123456781')
+        profile = TravelProfile.objects.get(user_id=self.user.id)
+        profile1 = TravelProfile.objects.get(user_id=user1.id)
+        FriendRequest.objects.create(from_user=profile, to_user=profile1)
+        friends_request = FriendRequest.objects.filter(from_user=profile.user_id, to_user=profile1.user_id)
+
+        self.client.get(reverse('send friend request', kwargs={'pk': user1.id}))
 
         self.assertEqual(1, len(friends_request))
 

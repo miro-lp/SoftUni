@@ -11,6 +11,7 @@ from YouTravel.accounts.forms import LoginForm, RegisterForm, ProfileForm
 from YouTravel.accounts.models import TravelProfile
 from django.views.generic import ListView, DetailView
 
+from YouTravel.accounts.tasks import send_greeting_email
 from YouTravel.common.models import FriendRequest
 
 
@@ -33,6 +34,8 @@ def sign_up_user(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            email = user.email
+            send_greeting_email.delay(email)
             login(request, user)
             return redirect('profile details')
     else:
@@ -41,7 +44,6 @@ def sign_up_user(request):
         'form': form
     }
     return render(request, 'accounts/signup.html', context)
-
 
 
 def sign_out_user(request):
@@ -92,17 +94,18 @@ class TravelersListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user_profile = TravelProfile.objects.get(user=self.request.user)
-        return TravelProfile.objects.filter().exclude(friends=user_profile)
+        return TravelProfile.objects.filter().exclude(friends=user_profile).exclude(user=self.request.user)
 
 
 @login_required()
 def send_friend_request(request, pk):
     from_user = TravelProfile.objects.get(user_id=request.user.id)
     to_user = TravelProfile.objects.get(user_id=pk)
-    friend_request = FriendRequest(
-        from_user=from_user,
-        to_user=to_user)
-    friend_request.save()
+    if not FriendRequest.objects.filter(from_user=from_user, to_user=to_user):
+        friend_request = FriendRequest(
+            from_user=from_user,
+            to_user=to_user)
+        friend_request.save()
 
     return redirect('profiles list')
 

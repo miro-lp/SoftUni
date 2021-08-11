@@ -1,15 +1,10 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
-
-
-
 from YouTravel.accounts.forms import LoginForm, RegisterForm, ProfileForm
 from YouTravel.accounts.models import TravelProfile
 from django.views.generic import ListView, DetailView
-
 from YouTravel.accounts.tasks import send_greeting_email
 from YouTravel.common.models import FriendRequest
 
@@ -94,6 +89,12 @@ class TravelersListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user_profile = TravelProfile.objects.get(user=self.request.user)
         return TravelProfile.objects.filter().exclude(friends=user_profile).exclude(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        user_profile = TravelProfile.objects.get(user=self.request.user)
+        context = super().get_context_data(**kwargs)
+        context['is_friend_request_sent'] = FriendRequest.objects.filter(from_user=user_profile)
+        return context
 
 
 @login_required()

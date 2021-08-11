@@ -1,7 +1,5 @@
 from django import template
 
-from YouTravel.common.models import Comment
-
 register = template.Library()
 
 

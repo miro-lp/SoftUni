@@ -1,5 +1,7 @@
 {% extends 'shared/base.html' %}
-{% load static %}
+
+{% load get_friend_request%}
+
 {% block content %}
     <div id="pre-header" class="container" style="height: 40px">
         <!-- Spacing above header -->
@@ -57,10 +59,19 @@
                                                 </div>
 
                                                 <div class="col-md-6">
+                                                    {% if is_friend_request_sent|friend_request_exist:profile.user_id %}
                                                     <div>
+                                                        <a href=""
+                                                           class="btn btn-primary pull-right">Friended</a>
+                                                    </div>
+
+                                                    {% else %}
+                                                         <div>
                                                         <a href="{% url 'send friend request' profile.user.id %}"
                                                            class="btn btn-primary pull-right">Friend me</a>
                                                     </div>
+
+                                                    {% endif %}
                                                 </div>
 
                                             </div>

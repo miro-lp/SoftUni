@@ -7,8 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, Client
 from django.urls import reverse, resolve
 
-
-from YouTravel.common.models import  Comment, Like
+from YouTravel.common.models import Comment, Like
 from YouTravel.trips.models import Continent, Trip
 
 UserModel = get_user_model()
@@ -125,7 +124,7 @@ class AccountsViewsTest(TestCase):
         self.assertEquals(0, len(Trip.objects.all()))
         self.assertEquals(reverse('my list trips'), response['Location'])
 
-    def test_like_trip_when_exist(self):
+    def test_like_trip_when_is_liked(self):
         self.client.force_login(self.user)
         trip = Trip.objects.create(name_trip='Test_trip',
                                    country_name='Test_country',
@@ -141,7 +140,7 @@ class AccountsViewsTest(TestCase):
         self.assertEquals(reverse('list trips', kwargs={'pk': trip.continent_id}), response['Location'])
         self.assertEquals(0, len(is_like_exist))
 
-    def test_like_trip_when_not_exist(self):
+    def test_like_trip_when_not_is_liked(self):
         self.client.force_login(self.user)
         trip = Trip.objects.create(name_trip='Test_trip',
                                    country_name='Test_country',
